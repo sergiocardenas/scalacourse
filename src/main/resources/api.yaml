@@ -1,18 +1,324 @@
 swagger: '2.0'
 info:
+  title: API de gestion de Proyectos
+  description: API para poder crear, editar y eliminar porjectos y tareas
   version: "1.0.0"
+# the domain of the service
+host: api.etudiantes.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+consumes:
+  - application/json
+produces:
+  - application/json
 paths:
-  /hello:
-    get:
+  /creaProyecto:
+    put:
+      summary: Permite crear un nuevo proyecto en el sistema.
+      description: Permite crear un nuevo proyecto en el sistema.
+      parameters:
+        - name: project
+          in: body
+          description: La informacion del nuevo projecto.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectInfo'
+      tags:
+        - Proyectos
+      responses:
+        201:
+          description: Creación exitosa del projecto
+        400:
+          description: Petición mal formada
+        default:
+          description: Error inesperado
+  /editarProyecto:
+    post:
+      summary: Actualiza los datos de un proyecto en el sistema.
+      description: Actualiza los datos de un proyecto en el sistema.
+      parameters:
+        - name: project
+          in: body
+          description: La información del projecto.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectInfo'
+      tags:
+        - Proyectos
       responses:
         200:
+          description: Actualización exitosa del projecto.
+        400:
+          description: Petición mal formada
+        404:
+          description: "Projecto no encontrado"
+        default:
+          description: Error inesperado
+  /borrarProyecto:
+    delete:
+      summary: Borra los datos de un proyecto en el sistema.
+      description: Borra los datos de un proyecto en el sistema, siempre que se encuentre en el sistema.
+      parameters:
+        - name: project
+          in: body
+          description: La información del projecto.
+          required: true
           schema:
-            $ref: "#/definitions/HelloResponse"
+            $ref: '#/definitions/ProjectInfo'
+      tags:
+        - Proyectos
+      responses:
+        200:
+          description: Eliminación exitosa del projecto.
+        400:
+          description: Petición mal formada
+        404:
+          description: "Projecto no encontrado"
+        default:
+          description: Error inesperado
+  /completitudProyecto:
+    get:
+      summary: Proporciona el porcentaje de completitud del proyecto.
+      description: Proporciona el porcentaje de completitud del proyecto, siempre que se encuentre en el sistema.
+      parameters:
+        - name: project
+          in: body
+          description: La información del projecto.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectInfo'
+      tags:
+        - Proyectos
+      responses:
+        200:
+          description: Cosulta exitosa
+          schema:
+            $ref: '#/definitions/PercentInfo'
+              
+        400:
+          description: Petición mal formada
+        404:
+          description: "Projecto no encontrado"
+        default:
+          description: Error inesperado
+  /crearTareaEnProyecto:
+    put:
+      summary: Crea una nueva tarea asociada a un proyecto en el sistema.
+      description: Crea una nueva tarea asociada a un proyecto en el sistema, siempre que se encuentre en el sistema.
+      parameters:
+        - name: task
+          in: body
+          description: La información de la nueva tarea.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectTaskInfo'
+      tags:
+        - Tarea
+      responses:
+        201:
+          description: Creación exitosa de la tarea
+        400:
+          description: Petición mal formada
+        404:
+          description: "Projecto no encontrado"
+        default:
+          description: Error inesperado
+  /modificarTarea:
+    post:
+      summary: Actualiza los datos de una tarea asociada a un proyecto en el sistema.
+      description: Actualiza los datos de una tarea asociada a un proyecto en el sistema.
+      parameters:
+        - name: task
+          in: body
+          description: La información de la tarea.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectTaskInfo'
+      tags:
+        - Tarea
+      responses:
+        200:
+          description: Actualización exitosa de la tara.
+        400:
+          description: Petición mal formada
+        404:
+          description: "Projecto o tarea no encontrado"
+        default:
+          description: Error inesperado
+  /eliminarTarea:
+    delete:
+      summary: Elimina una tarea asociada a un proyecto en el sistema.
+      description: Elimina una tarea asociada a un proyecto en el sistema, siempre que ambos se encuentre en el sistema.
+      parameters:
+        - name: task
+          in: body
+          description: La información de la tarea.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectTaskInfo'
+      tags:
+        - Tarea
+      responses:
+        200:
+          description: Eliminación exitosa de la tarea
+        400:
+          description: Petición mal formada
+        404:
+          description: "Projecto o tarea no encontrada"
+        default:
+          description: Error inesperado
+  /asignarTarea:
+    post:
+      summary: Asigna una tarea asociada a un proyecto en el sistema a un usuario particular.
+      description: Asigna una tarea asociada a un proyecto a un usuario particular, siempre que ambos se encuentre en el sistema.
+      parameters:
+        - name: taskUser
+          in: body
+          description: La información de la tarea y del usuario.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectTaskInfo'
+      tags:
+        - Tarea
+      responses:
+        200:
+          description: Asigancion exitosa
+        400:
+          description: Petición mal formada
+        404:
+          description: "Projecto o tarea no encontrada"
+        default:
+          description: Error inesperado
+  /completarTarea:
+    post:
+      summary: Marca como completa una tarea asociada a un proyecto en el sistema.
+      description: Marca como completa una tarea asociada a un proyecto, siempre que ambos se encuentre en el sistema.
+      parameters:
+        - name: task
+          in: body
+          description: La información de la tarea.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectTaskInfo'
+      tags:
+        - Tarea
+      responses:
+        200:
+          description: Asigancion exitosa
+        400:
+          description: Petición mal formada
+        404:
+          description: "Projecto o tarea no encontrada"
+        default:
+          description: Error inesperado
+  /desmarcarTarea:
+    post:
+      summary: desmarca como completa una tarea asociada a un proyecto en el sistema.
+      description: desmarca como completa una tarea asociada a un proyecto, siempre que ambos se encuentre en el sistema.
+      parameters:
+        - name: task
+          in: body
+          description: La información de la tarea.
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectTaskInfo'
+      tags:
+        - Tarea
+      responses:
+        200:
+          description: Asigancion exitosa
+        400:
+          description: Petición mal formada
+        404:
+          description: "Projecto o tarea no encontrada"
+        default:
+          description: Error inesperado
+  /consultarUsuario:
+    get:
+      summary: Consulta las tareas de un usuario.
+      description: "Consulta las tareas de un usuario, filtrando por el nombre del usuario."
+      parameters:
+        - name: user
+          in: body
+          description: La información del usuar.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - Usuario
+      responses:
+        200:
+          description: Cosulta exitosa
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TaskInfo'
+        400:
+          description: Petición mal formada
+        default:
+          description: Error inesperado
 definitions:
-  HelloResponse:
+  ProjectInfo:
     type: object
-    required:
-    - hello
+    required: [nombreProyecto]
     properties:
-      hello:
+      nombreProyecto:
         type: string
+        description: Nombre del proyecto.
+      liderProyecto:
+        type: string
+        description: Nombre del lider.
+      fechaInicioProyecto:
+        type: string
+        format: date
+        description: fecha de inicio del proyecto.
+      fechaFinProyecto:
+        type: string
+        format: date
+        description: fecha de final del proyecto.
+      tareas:
+        type: array
+        items:
+          $ref: '#/definitions/TaskInfo'
+  TaskInfo:
+    type: object
+    required: [nombreTarea]
+    properties:
+      nombreTarea:
+        type: string
+        description: Nombre de la tarea.
+      encargadoTarea:
+        type: string
+        description: Nombre del usuario encargado.
+      finalizadaTarea:
+        type: boolean
+        description: Indicador si la tarea está completada.
+  PercentInfo:
+    type: object
+    required: [porcentaje]
+    properties:
+      porcentaje:
+        type: integer
+        description: Porcentaje de finalizacion.
+  ProjectTaskInfo:
+    type: object
+    required: [nombreProyecto,tarea]
+    properties:
+      nombreProyecto:
+        type: string
+        description: Nombre del proyecto.
+      nombreUsuario:
+        type: string
+        description: Nombre del usuario encargado de la tarea.
+      tarea:
+        $ref: '#/definitions/TaskInfo'
+  User:
+    type: object
+    required: [nombreUsuario]
+    properties:
+      nombreUsuario:
+        type: string
+        description: Nombre del usuario.
